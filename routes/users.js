@@ -43,23 +43,18 @@ router.post('/', (req, res, next) => {
   }
 
   const nonWhitespaceFields = ['username', 'password'];
-  // console.log(nonWhitespaceFields);
-
   const whitespaceField = nonWhitespaceFields.find(
     field => field in req.body && (req.body[field].trim() !== req.body[field])
   );
-  console.log(whitespaceField);
   if (whitespaceField) {
     const err = new Error(`${whitespaceField} cannot contain leading or trailing spaces!`);
     err.status = 422;
     return next(err);
   }
 
-
- 
-  // if (req.body)
-  // const usernameMin = ['username'];
-  // usernameMin.find(
+  // const parameterFields = ['username', 'password'];
+  
+  // parameterFields.find(
   //   field => field in req.body && req.body[field].length < 1
   // )
 
