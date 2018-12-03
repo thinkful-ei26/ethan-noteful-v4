@@ -20,4 +20,10 @@ userSchema.set('toJSON', {
   }
 });
 
+userSchema.methods.validatePassword = function (incomingPassword) {
+  const user = this;
+  console.log(this);
+  return incomingPassword === user.password;
+};
+
 module.exports = mongoose.model('User', userSchema);
