@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
 
 const { PORT, MONGODB_URI } = require('./config');
 
@@ -18,6 +19,7 @@ const authRouter = require('./routes/auth');
 const app = express();
 
 passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 // Log all requests. Skip logging during
 app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common', {
