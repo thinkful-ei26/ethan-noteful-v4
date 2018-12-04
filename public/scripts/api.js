@@ -8,7 +8,7 @@ const api = (function () {
       url: path,
       dataType: 'json',
       data: query,
-      headers: { 'Authorization': `Bearer: ${store.authToken}` }
+      headers: { 'Authorization': `Bearer ${store.authToken}` }
     });
   };
   
@@ -17,7 +17,7 @@ const api = (function () {
       type: 'GET',
       dataType: 'json',
       url: path,
-      headers: { 'Authorization': `Bearer: ${store.authToken}` }
+      headers: { 'Authorization': `Bearer ${store.authToken}` }
     });
   };
   
@@ -28,7 +28,7 @@ const api = (function () {
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify(obj),
-      headers: { 'Authorization': `Bearer: ${store.authToken}` }
+      headers: { 'Authorization': `Bearer ${store.authToken}` }
     });
   };
   
@@ -40,7 +40,7 @@ const api = (function () {
       dataType: 'json',
       processData: false,
       data: JSON.stringify(obj),
-      headers: { 'Authorization': `Bearer: ${store.authToken}` }
+      headers: { 'Authorization': `Bearer ${store.authToken}` }
     });
   };
   
@@ -49,7 +49,7 @@ const api = (function () {
       type: 'DELETE',
       dataType: 'json',
       url: path,
-      headers: { 'Authorization': `Bearer: ${store.authToken}` }
+      headers: { 'Authorization': `Bearer ${store.authToken}` }
     });
   };
   

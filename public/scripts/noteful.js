@@ -376,6 +376,8 @@ const noteful = (function () {
         password: signupForm.find('.js-password-entry').val()
       };
 
+      console.log(newUser);
+
       api.create('/api/users', newUser)
         .then(response => {
           signupForm[0].reset();
@@ -394,10 +396,13 @@ const noteful = (function () {
         username: loginForm.find('.js-username-entry').val(),
         password: loginForm.find('.js-password-entry').val()
       };
+      
+      console.log(loginUser);
 
       api.create('/api/login', loginUser)
         .then(response => {
           store.authToken = response.authToken;
+          console.log(store.authToken);
           // store.currentUser = response;
           store.authorized = true;
           loginForm[0].reset();

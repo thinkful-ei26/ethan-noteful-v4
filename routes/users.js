@@ -8,7 +8,7 @@ const User = require('../models/user');
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
-  const { fullName, username, password } = req.body;
+  const { fullname, username, password } = req.body;
   
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(
@@ -64,7 +64,7 @@ router.post('/', (req, res, next) => {
       const newUser = {
         username,
         password: digest,
-        fullName
+        fullname
       };
       return User.create(newUser);
     })
