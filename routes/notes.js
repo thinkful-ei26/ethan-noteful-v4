@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const Note = require('../models/note');
+const Folder = require('../models/folder');
+
 
 const router = express.Router();
 
@@ -105,7 +107,19 @@ router.post('/', (req, res, next) => {
 
   console.log(newNote);
 
-  Note.create(newNote)
+  Folder.countDocuments({
+    _id: newNote.folderId,
+    userId: newNote.userId
+  })
+    .then(count => {
+      if (count) {
+        return Note.create(newNote);
+      } else {
+        const err = new Error('This is not your folder!');
+        err.status = 400;
+        return next(err);
+      }
+    })
     .then(result => {
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
@@ -165,9 +179,20 @@ router.put('/:id', (req, res, next) => {
     delete toUpdate.folderId;
     toUpdate.$unset = {folderId : 1};
   }
-
-  Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true })
-    .then(result => {
+  
+  Folder.countDocuments({
+    _id: toUpdate.folderId,
+    userId: toUpdate.userId
+  })
+    .then(count => {
+      if (count) {
+        return Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true });
+      } else {
+        const err = new Error('This is not your folder!');
+        err.status = 400;
+        return next(err);
+      }
+    }).then(result => {
       if (result) {
         res.json(result);
       } else {

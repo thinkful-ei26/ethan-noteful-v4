@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const { MONGODB_URI } = require('../config');
 
 const Note = require('../models/note');
+const Folder = require('../models/folder');
+
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
@@ -11,24 +13,24 @@ mongoose.connect(MONGODB_URI)
     /**
      * Find/Search for notes using Note.find
      */
-    const searchTerm = 'gaga';
-    let filter = {};
+    // const searchTerm = 'gaga';
+    // let filter = {};
 
-    if (searchTerm) {
-      // Using the `$regex` operator (case-sensitive by default)
-      filter.title = { $regex: searchTerm };
+    // if (searchTerm) {
+    //   // Using the `$regex` operator (case-sensitive by default)
+    //   filter.title = { $regex: searchTerm };
 
-      // Using the `$regex` operator with case-insensitive `i` option
-      // filter.title = { $regex: searchTerm, $options: 'i' };
+    //   // Using the `$regex` operator with case-insensitive `i` option
+    //   // filter.title = { $regex: searchTerm, $options: 'i' };
 
-      // Alternative using regex `/pattern/i` but not recommended
-      // filter.title = /ways/i;
-    }
+    //   // Alternative using regex `/pattern/i` but not recommended
+    //   // filter.title = /ways/i;
+    // }
 
-    return Note.find(filter).sort({ updatedAt: 'desc' })
-      .then(results => {
-        console.log(results);
-      });
+    // return Note.find(filter).sort({ updatedAt: 'desc' })
+    //   .then(results => {
+    //     console.log(results);
+    //   });
 
     /**
      * Find note by id using Note.findById
@@ -45,15 +47,30 @@ mongoose.connect(MONGODB_URI)
     /**
      * Create a new note using Note.create
      */
-    // const newNote = {
-    //   title: 'this is a new note',
-    //   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    // };
-    //
+    const newNote = {
+      title: 'this is a new note',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      userId: '000000000000000000000002',
+      folderId: '222222222222222222222201'
+    };
+    return Folder.countDocuments({
+      _id: newNote.folderId,
+      userId: newNote.userId
+    })
+      .then(count => {
+        if (count) {
+          return Note.create(newNote);
+        } else {
+          return Promise.reject({message: 'blah'});
+        }
+      })
     // return Note.create(newNote)
-    //   .then(result => {
-    //     console.log(result);
-    //   });
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     /**
      * Update a note by id using Note.findByIdAndUpdate
