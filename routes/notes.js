@@ -47,7 +47,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.id;
-  console.log(userId);
+  console.log(req.user);
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -73,6 +73,8 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
   const { title, content, folderId, tags } = req.body;
+  const userId = req.user.id;
+  console.log(req.body);
 
   /***** Never trust users - validate input *****/
   if (!title) {
@@ -96,10 +98,12 @@ router.post('/', (req, res, next) => {
     }
   }
 
-  const newNote = { title, content, folderId, tags };
+  const newNote = { title, content, folderId, tags, userId };
   if (newNote.folderId === '') {
     delete newNote.folderId;
   }
+
+  console.log(newNote);
 
   Note.create(newNote)
     .then(result => {
@@ -113,8 +117,14 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user.id;
 
   const toUpdate = {};
+
+  toUpdate.userId = userId;
+
+  // if (userId)
+
   const updateableFields = ['title', 'content', 'folderId', 'tags'];
 
   updateableFields.forEach(field => {
@@ -156,7 +166,7 @@ router.put('/:id', (req, res, next) => {
     toUpdate.$unset = {folderId : 1};
   }
 
-  Note.findByIdAndUpdate(id, toUpdate, { new: true })
+  Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true })
     .then(result => {
       if (result) {
         res.json(result);
@@ -169,9 +179,23 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
+//   Note.findByIdAndUpdate(id, toUpdate, { new: true })
+//     .then(result => {
+//       if (result) {
+//         res.json(result);
+//       } else {
+//         next();
+//       }
+//     })
+//     .catch(err => {
+//       next(err);
+//     });
+// });
+
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/:id', (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user.id;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -180,7 +204,7 @@ router.delete('/:id', (req, res, next) => {
     return next(err);
   }
 
-  Note.findByIdAndRemove(id)
+  Note.findOneAndRemove({ _id: id, userId})
     .then(() => {
       res.sendStatus(204);
     })
