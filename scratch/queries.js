@@ -5,7 +5,7 @@ const { MONGODB_URI } = require('../config');
 
 const Note = require('../models/note');
 const Folder = require('../models/folder');
-
+const Tag = require('../models/tag');
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
@@ -50,28 +50,58 @@ mongoose.connect(MONGODB_URI)
     const newNote = {
       title: 'this is a new note',
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      userId: '000000000000000000000002',
-      folderId: '222222222222222222222201'
+      userId: '000000000000000000000001',
+      folderId: '222222222222222222222202',
+      tags: [
+        '333333333333333333333305', '333333333333333333333307'
+      ],
     };
-    return Folder.countDocuments({
-      _id: newNote.folderId,
+    
+    // if (newNote.tags) {
+    //   if (!Array.isArray(newNote.tags)) {
+    //     return Promise.reject({message: 'blah'});
+    //   }
+    // }
+    return Tag.countDocuments({
+      _id: { $in: newNote.tags },
       userId: newNote.userId
     })
+      .then(results => {
+        console.log(results);
+        if (results !== newNote.tags.length) {
+          return Promise.reject({message: 'not your tag'});
+        }
+        return Folder.countDocuments({
+          _id: newNote.folderId,
+          userId: newNote.userId
+        });
+      })
       .then(count => {
         if (count) {
           return Note.create(newNote);
         } else {
-          return Promise.reject({message: 'blah'});
+          return Promise.reject({message: 'not your folder'});
         }
       })
+  
+    //  .then(Folder.countDocuments({
+    //   _id: newNote.folderId,
+    //   userId: newNote.userId
+    // })
+    //   .then(count => {
+    //     if (count) {
+    //       return Note.create(newNote);
+    //     } else {
+    //       return Promise.reject({message: 'blah'});
+    //     }
+    //   })
     // return Note.create(newNote)
       .then(result => {
         console.log(result);
       })
       .catch(err => {
         console.log(err);
-      });
-
+      })
     /**
      * Update a note by id using Note.findByIdAndUpdate
      */
@@ -97,11 +127,12 @@ mongoose.connect(MONGODB_URI)
     //     console.log('deleted', result);
     //   });
 
-  })
-  .then(() => {
-    return mongoose.disconnect();
-  })
-  .catch(err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
+  
+      .then(() => {
+        return mongoose.disconnect();
+      })
+      .catch(err => {
+        console.error(`ERROR: ${err.message}`);
+        console.error(err);
+      });
   });
