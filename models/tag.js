@@ -3,7 +3,22 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true }
+  name: { 
+    type: String, 
+    required: true 
+  },
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  },
+});
+
+//Add compound index so each user's tags must have unique names, but multiple users can have tag with same name
+schema.index({ 
+  name: 1, 
+  userId: 1 
+}, { 
+  unique: true 
 });
 
 // Add `createdAt` and `updatedAt` fields
