@@ -8,7 +8,8 @@ const User = require('../models/user');
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
-  const { fullname, username, password } = req.body;
+  let { fullname, username, password } = req.body;
+  fullname = fullname.trim();
   
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(
