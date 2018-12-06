@@ -120,12 +120,12 @@ router.post('/', (req, res, next) => {
     userId: newNote.userId
   })
     .then(results => {
-      if (!newNote.folderId) {
-        return Promise.resolve(true);
-      } else if (newNote.tags && results !== newNote.tags.length ) {
+      if (newNote.tags && results !== newNote.tags.length ) {
         const err = new Error('The tags array contains an invalid id!');
         err.status = 400;
         return next(err);
+      } else if (!newNote.folderId) {
+        return Promise.resolve(true);
       } else {
         return Folder.countDocuments({
           _id: newNote.folderId,
@@ -144,7 +144,7 @@ router.post('/', (req, res, next) => {
       }
     })
     .then(result => {
-      console.log(result);
+      // console.log(result);
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
     .catch(err => {
@@ -215,21 +215,24 @@ router.put('/:id', (req, res, next) => {
     userId: toUpdate.userId
   })
     .then(results => {
-      if (!toUpdate.folderId) {
-        return Promise.resolve(true);
-      } else if (toUpdate.tags && results !== toUpdate.tags.length) {
+      if (toUpdate.tags && results !== toUpdate.tags.length) {
         const err = new Error('The tags array contains an invalid id!');
         err.status = 400;
         return next(err);
+      } else if (!toUpdate.folderId) {
+        return Promise.resolve(true);
+      } else {
+        return Folder.countDocuments({
+          _id: toUpdate.folderId,
+          userId: toUpdate.userId
+        });
       }
-      return Folder.countDocuments({
-        _id: toUpdate.folderId,
-        userId: toUpdate.userId
-      });
     })
     .then(count => {
       if (count) {
-        return Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true });
+        console.log(toUpdate);
+        return Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true })
+          .populate('tags');
       } else {
         const err = new Error('The folderId is not valid');
         err.status = 400;
@@ -237,6 +240,7 @@ router.put('/:id', (req, res, next) => {
       }
     })
     .then(result => {
+      console.log(toUpdate);
       if (result) {
         res.json(result);
       } else {
