@@ -50,7 +50,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.id;
-  console.log(req.user);
+  // console.log(req.user);
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -232,7 +232,7 @@ router.put('/:id', (req, res, next) => {
       if (count) {
         // console.log(toUpdate);
         return Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true });
-          // .populate('tags');
+        // .populate('tags');
       } else {
         const err = new Error('The folderId is not valid');
         err.status = 400;

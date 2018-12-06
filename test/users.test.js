@@ -86,7 +86,7 @@ describe('Noteful API - Users', function () {
         .request(app)
         .post('/api/users')
         .send({ username, fullname })
-        .then( response => {
+        .then(response => {
           results = response;
           expect(results).to.have.status(422);
           expect(results.body.message).to.equal('Missing password in request');
@@ -230,10 +230,6 @@ describe('Noteful API - Users', function () {
           expect(user).to.exist;
           expect(user.id).to.equal(res.body.id);
           expect(user.fullname).to.equal(whitespaceFullname.trim());
-          return user.validatePassword(password);
-        })
-        .then(isValid => {
-          expect(isValid).to.be.true;
         });
     });
 
