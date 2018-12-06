@@ -13,8 +13,7 @@ const Note = require('../models/note');
 const User = require('../models/user');
 
 const { notes, tags, users } = require('../db/data');
-const { TEST_MONGODB_URI } = require('../config');
-const { JWT_SECRET } = require('../config');
+const { TEST_MONGODB_URI, JWT_SECRET } = require('../config');
 
 chai.use(chaiHttp);
 const expect = chai.expect;

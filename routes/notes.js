@@ -77,7 +77,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const { title, content, folderId, tags } = req.body;
   const userId = req.user.id;
-  console.log(req.body);
+  // console.log(req.body);
 
   /***** Never trust users - validate input *****/
   if (!title) {
@@ -134,7 +134,7 @@ router.post('/', (req, res, next) => {
       }
     })
     .then(count => {
-      console.log(count);
+      // console.log(count);
       if (count) {
         return Note.create(newNote);
       } else {
@@ -230,9 +230,9 @@ router.put('/:id', (req, res, next) => {
     })
     .then(count => {
       if (count) {
-        console.log(toUpdate);
-        return Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true })
-          .populate('tags');
+        // console.log(toUpdate);
+        return Note.findOneAndUpdate({ _id: id, userId}, toUpdate, { new: true });
+          // .populate('tags');
       } else {
         const err = new Error('The folderId is not valid');
         err.status = 400;
@@ -240,7 +240,7 @@ router.put('/:id', (req, res, next) => {
       }
     })
     .then(result => {
-      console.log(toUpdate);
+      // console.log(toUpdate);
       if (result) {
         res.json(result);
       } else {
