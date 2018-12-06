@@ -13,7 +13,6 @@ const Note = require('../models/note');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../config');
 
-
 const { folders, notes, users } = require('../db/data');
 const { TEST_MONGODB_URI } = require('../config');
 
