@@ -173,7 +173,6 @@ describe('Noteful API - Users', function () {
         });
     });
 
-
     it('Should reject users with password greater than 72 characters', function (){
       let results;
       const longPw = crypto.randomBytes(40).toString('hex');

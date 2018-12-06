@@ -111,7 +111,7 @@ router.post('/', (req, res, next) => {
     delete newNote.folderId;
   }
 
-  console.log(newNote);
+  // console.log(newNote);
 
 
 
@@ -120,17 +120,21 @@ router.post('/', (req, res, next) => {
     userId: newNote.userId
   })
     .then(results => {
-      if (newNote.tags && results !== newNote.tags.length ) {
+      if (!newNote.folderId) {
+        return Promise.resolve(true);
+      } else if (newNote.tags && results !== newNote.tags.length ) {
         const err = new Error('The tags array contains an invalid id!');
         err.status = 400;
         return next(err);
+      } else {
+        return Folder.countDocuments({
+          _id: newNote.folderId,
+          userId: newNote.userId
+        });
       }
-      return Folder.countDocuments({
-        _id: newNote.folderId,
-        userId: newNote.userId
-      });
     })
     .then(count => {
+      console.log(count);
       if (count) {
         return Note.create(newNote);
       } else {
@@ -140,6 +144,7 @@ router.post('/', (req, res, next) => {
       }
     })
     .then(result => {
+      console.log(result);
       res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
     })
     .catch(err => {
@@ -210,7 +215,9 @@ router.put('/:id', (req, res, next) => {
     userId: toUpdate.userId
   })
     .then(results => {
-      if (toUpdate.tags && results !== toUpdate.tags.length) {
+      if (!toUpdate.folderId) {
+        return Promise.resolve(true);
+      } else if (toUpdate.tags && results !== toUpdate.tags.length) {
         const err = new Error('The tags array contains an invalid id!');
         err.status = 400;
         return next(err);
