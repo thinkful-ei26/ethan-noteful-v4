@@ -12,8 +12,6 @@ const User = require('../models/user');
 
 const expect = chai.expect;
 
-
-
 chai.use(chaiHttp);
 
 describe('Noteful API - Users', function () {
