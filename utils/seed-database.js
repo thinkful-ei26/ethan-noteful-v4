@@ -33,6 +33,10 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
   })
   .then(results => {
     console.log('Inserted', results);
+    console.log('Inserted', results[0].length, 'notes');
+    console.log('Inserted', results[1].length, 'folders');
+    console.log('Inserted', results[2].length, 'tags');
+    console.log('Inserted', results[3].length, 'users');
     console.info('Disconnecting');
     return mongoose.disconnect();
   })
