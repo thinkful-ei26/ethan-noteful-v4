@@ -59,7 +59,7 @@ describe('Noteful API - Login', function () {
     // const password = 'password';
     // console.log(username, password);
 
-    it.only('Should allow an existing user to login', function () {
+    it('Should allow an existing user to login', function () {
       // console.log(user);
       const { username, password } = user;
       // console.log(username, password);
@@ -77,7 +77,7 @@ describe('Noteful API - Login', function () {
         });
     });
 
-    it.only('Should reject a user logging in with an incorrect password', function () {
+    it('Should reject a user logging in with an incorrect password', function () {
       // console.log(user);
       const { username } = user;
       const password = crypto.randomBytes(8).toString('hex');
@@ -97,7 +97,7 @@ describe('Noteful API - Login', function () {
         });
     });
 
-    it.only('Should reject a user logging in with an incorrect username', function () {
+    it('Should reject a user logging in with an incorrect username', function () {
       const { password } = user;
       const username = crypto.randomBytes(8).toString('hex');
 
@@ -116,7 +116,7 @@ describe('Noteful API - Login', function () {
         });
     });
 
-    it.only('Should reject a user logging in with no credentials', function () {
+    it('Should reject a user logging in with no credentials', function () {
       let res;
       return chai
         .request(app)
@@ -132,7 +132,7 @@ describe('Noteful API - Login', function () {
         });
     });
 
-    it.only('Should return a valid auth token', function () {
+    it('Should return a valid auth token', function () {
       let res;
       const { username, password, fullname, id } = user;
 
